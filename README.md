@@ -57,4 +57,7 @@ The QuickLit is a web application built with Angular for the frontend and Python
 
 ## User Interface
 
+![Screenshot](snapshots/home.png)
+![Screenshot](snapshots/summary.png)
+![Screenshot](snapshots/export.png)
 
