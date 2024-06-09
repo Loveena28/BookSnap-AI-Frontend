@@ -1,0 +1,75 @@
+.container {
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+.upload-card {
+  margin-top: 1rem;
+}
+.card-header {
+  padding: 0.5rem;
+  margin-bottom: 0;
+  background-color: rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+  justify-content: center;
+}
+.card-content {
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.input-group {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.form-control {
+  display: flex;
+  width: 100%;
+  font-size: 1rem;
+  font-weight: 400;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+}
+.card-footer {
+  padding: 0.5rem;
+  margin-bottom: 0;
+  background-color: rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+.card-body {
+  margin: 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  overflow: hidden;
+}
+@media only screen and (min-width: 600px) {
+  .card-body {
+    flex-direction: row;
+    align-items: start;
+  }
+}
+.mat-spinner::ng-deep circle {
+  stroke: black;
+}
+.m-4{
+  margin:1.5rem
+}
+.card-title{
+  font-size:1.25rem;
+  margin: 0;
+}
+.card-subtitle{
+  color:#6c757d;
+  font-size: 1rem;
+  margin: 0.5rem 0;
+}

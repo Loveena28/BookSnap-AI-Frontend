@@ -1,0 +1,75 @@
+<div class="container">
+  <mat-card class="upload-card">
+    <mat-card-header class="card-header">
+      <p style="text-align: center">
+        Capture a book cover with your mobile device and instantly uncover its
+        summary, title, and author. Dive into new stories in a flash!
+      </p>
+    </mat-card-header>
+    <mat-card-content class="card-content">
+      <p
+        style="
+          flex: 0 0 auto;
+          margin-bottom: 0.5rem;
+          font-size: 1.25rem;
+          font-weight: 500;
+        "
+      >
+        Capture a Photo
+      </p>
+      <div class="input-group">
+        <input
+          type="file"
+          class="form-control"
+          id="image"
+          aria-describedby="image"
+          aria-label="Upload"
+          (change)="onFileSelected($event)"
+        />
+        <button
+          mat-raised-button
+          color="primary"
+          style="height: 40px; font-size: 20px"
+          (click)="summarize($event)"
+          [disabled]="!selectedFile"
+        >
+          Summarize
+        </button>
+      </div>
+    </mat-card-content>
+    <mat-card-footer class="card-footer">
+      <p style="text-align: center">
+        Explore and enjoy the world of literature with ease and convenience.
+      </p>
+    </mat-card-footer>
+  </mat-card>
+  <ng-container *ngIf="result$ | async as result">
+    <ng-container *ngIf="result.value; else loading">
+      <mat-card style="margin-top: 1rem">
+        <div class="card-body">
+          <img [src]="result.value.imgsrc" style="width: 260px" />
+          <div class="m-4">
+            <h5 class="card-title">{{ result.value.title }}</h5>
+            <h6 class="card-subtitle">By <b>{{ result.value.author }}</b></h6>
+            <p class="card-text">
+              {{ result.value.summary }}
+            </p>
+            <button
+              mat-raised-button
+              color="primary"
+              style="font-size: 15px"
+              (click)="generatePDF(result.value)"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      </mat-card>
+    </ng-container>
+    <ng-template #loading>
+      <div style="display: flex; justify-content: center; margin-top: 10px">
+        <mat-spinner [diameter]="30"></mat-spinner>
+      </div>
+    </ng-template>
+  </ng-container>
+</div>
