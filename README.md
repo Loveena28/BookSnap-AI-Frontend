@@ -17,7 +17,7 @@ The QuickLit is a web application built with Angular for the frontend and Python
 - Angular CLI
 - Python
 - Google Cloud Vision API key
-- OpenAI GPT-3 API key
+- Gemini API key
 
 ## Getting Started
 
