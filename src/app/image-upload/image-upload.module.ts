@@ -6,6 +6,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ImageUploadRoutingModule } from './image-upload-routing.module';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { FormsModule } from '@angular/forms';
+import {MatChipsModule} from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
+
 @NgModule({
   declarations: [ImageUploadComponent],
   imports: [
@@ -14,7 +19,11 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatButtonModule,
     MatProgressSpinnerModule,
     ImageUploadRoutingModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatButtonToggleModule,
+    FormsModule,
+    MatChipsModule,
+    MatIconModule
   ],
   exports: [ImageUploadComponent]
 })

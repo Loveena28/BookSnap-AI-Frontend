@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { BackendApiService, Result } from '../backend-api.service';
 import { BehaviorSubject, catchError, of, tap } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import jsPDF from 'jspdf';
+import { ViewChild, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-image-upload',
@@ -9,11 +11,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./image-upload.component.css'],
 })
 export class ImageUploadComponent {
+  summaryMode: 'short' | 'detailed' = 'short';
+  @ViewChild('fileInput') fileInput!: ElementRef;
+  isDetailed = false;
   selectedFile: File | undefined;
   result$ = new BehaviorSubject<{ value: Summary | null } | undefined>(
     undefined
   );
-  constructor(private api: BackendApiService,private snackbar:MatSnackBar) {}
+  constructor(private api: BackendApiService, private snackbar: MatSnackBar) {}
 
   async onFileSelected(event: Event) {
     this.selectedFile = (event.target as HTMLInputElement)?.files?.[0];
@@ -32,15 +37,20 @@ export class ImageUploadComponent {
   }
 
   summarize(event: Event) {
-    if (!this.selectedFile) {
-      return;
-    }
+    const mode = this.isDetailed ? 'detailed' : 'short';
+
+    if (!this.selectedFile) return;
     event.preventDefault();
     this.result$.next({ value: null });
+
+    const formData = new FormData();
+    formData.append('image', this.selectedFile);
+    formData.append('summary_mode', mode);
+
     this.api
-      .summarizeImage(this.selectedFile)
+      .summarizeImage(formData) // Update the service method to accept FormData
       .pipe(
-        catchError((x) => {
+        catchError((err) => {
           this.result$.next(undefined);
           this.snackbar.open('Failed to summarize image', 'Close', {
             duration: 3000,
@@ -48,7 +58,6 @@ export class ImageUploadComponent {
           return of(null);
         }),
         tap(async (x) => {
-          console.log(x);
           if (x) {
             try {
               const y = {
@@ -58,7 +67,6 @@ export class ImageUploadComponent {
               this.result$.next({ value: y });
             } catch (error) {
               this.result$.next(undefined);
-              console.log(error);
               this.snackbar.open('Failed to summarize image', 'Close', {
                 duration: 3000,
               });
@@ -69,36 +77,77 @@ export class ImageUploadComponent {
       .subscribe();
   }
   generatePDF(result: Summary) {
-    console.log(result)
-    var a = window.open('', '', 'height=800, width=700');
-    var imgElement = a?.document.createElement('img');
-    imgElement!.setAttribute('height', '400px');
-    imgElement!.src = result.imgsrc;
+    const doc = new jsPDF('p', 'pt', 'a4');
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 40;
+    let cursorY = margin;
 
-    var div = a?.document.createElement('div');
-    div!.setAttribute('style', 'margin:1.5rem 0');
-    var h5 = a?.document.createElement('h5');
-    div?.appendChild(h5!);
-    h5!.textContent = result.title;
-    h5!.setAttribute('style', 'font-size:1.25rem;margin: 0;');
+    const image = new Image();
+    image.crossOrigin = 'anonymous';
+    image.src = result.imgsrc;
 
-    var h6 = a?.document.createElement('h6');
-    div?.appendChild(h6!);
-    h6!.textContent = result.author;
-    h6!.setAttribute(
-      'style',
-      'color:#6c757d;font-size: 1rem;margin: 0.5rem 0;'
-    );
+    image.onload = () => {
+      let imgWidth = image.naturalWidth * 0.75; // Convert px to pt
+      let imgHeight = image.naturalHeight * 0.75;
 
-    var p = a?.document.createElement('p');
-    div?.appendChild(p!);
-    p!.textContent = result.summary;
+      const maxWidth = pageWidth - 2 * margin;
+      const maxHeight = pageHeight / 2;
 
-    a?.document.body.append(imgElement!);
-    a?.document.body.append(div!);
-    a?.document.close();
-    a?.print();
+      // Scale down proportionally if needed
+      if (imgWidth > maxWidth || imgHeight > maxHeight) {
+        const widthRatio = maxWidth / imgWidth;
+        const heightRatio = maxHeight / imgHeight;
+        const scale = Math.min(widthRatio, heightRatio);
+        imgWidth *= scale;
+        imgHeight *= scale;
+      }
+
+      // Center the image horizontally
+      const centerX = (pageWidth - imgWidth) / 2;
+
+      doc.addImage(image, 'JPEG', centerX, cursorY, imgWidth, imgHeight);
+      cursorY += imgHeight + 20;
+      doc.setFontSize(16);
+      doc.setFont('helvetica', 'bold');
+      doc.text(result.title, margin, cursorY);
+
+      cursorY += 20;
+      doc.setFontSize(12);
+      doc.setTextColor(100);
+      doc.text(`Genre: ${result.genre}`, margin, cursorY);
+
+      cursorY += 20;
+      doc.text(`By ${result.author}`, margin, cursorY);
+
+      cursorY += 30;
+      doc.setFontSize(11);
+      doc.setTextColor(50);
+
+      // Wrap summary manually to fit within margins
+      const summaryLines = doc.splitTextToSize(
+        result.summary,
+        pageWidth - 2 * margin
+      );
+      summaryLines.forEach((line: string[]) => {
+        if (cursorY > pageHeight - margin) {
+          doc.addPage();
+          cursorY = margin;
+        }
+        doc.text(line, margin, cursorY);
+        cursorY += 18;
+      });
+
+      doc.save(`${result.title}.pdf`);
+    };
+
+    image.onerror = () => {
+      this.snackbar.open('Failed to load cover image', 'Close', {
+        duration: 3000,
+      });
+    };
   }
+
   compressImage(file: File): Promise<File> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -131,6 +180,14 @@ export class ImageUploadComponent {
         reject(error);
       };
     });
+  }
+  clear() {
+    this.selectedFile = undefined;
+    this.result$.next(undefined);
+
+    if (this.fileInput) {
+      this.fileInput.nativeElement.value = '';
+    }
   }
 }
 type Summary = Result & { imgsrc: string };
