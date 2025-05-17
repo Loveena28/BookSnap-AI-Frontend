@@ -53,5 +53,9 @@ npm install
 ```bash
 ng serve
 ```
+---
 
-
+## 🗺️ Roadmap
+- Switch backend to **Django + PostgreSQL**
+- Add **user login** and **history of past summaries**
+- Add **dark mode** toggle
