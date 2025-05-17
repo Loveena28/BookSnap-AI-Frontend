@@ -1,63 +1,57 @@
-# QuickLit
+# 📚 BookSnap-AI — Instantly Summarize Books from a Snapshot
 
-## Overview
+**BookSnap-AI** lets you snap a book cover and instantly get its **title**, **author**, **genre**, and an AI-powered **summary** - either short or detailed. All you need is your camera 📸.
 
-The QuickLit is a web application built with Angular for the frontend and Python for the backend. It allows users to upload a picture of a book cover, extracts the book title using Google Cloud Vision API, and then uses ChatGPT to generate a summary. Users can also save the summary as a PDF.
+---
 
-## Features
+## 🚀 Live Demo
 
-- **Image Upload:** Users can upload a picture of a book cover.
-- **Google Cloud Vision API Integration:** Extracts the book title from the uploaded image.
-- **ChatGPT Integration:** Generates book title, author, and summary in JSON format based on the extracted title.
-- **PDF Export:** Users can save the generated summary as a PDF file.
+🔗 [Try BookSnap-AI](https://quicklit.vercel.app/upload)
 
-## Prerequisites
+---
 
-- Node.js
-- Angular CLI
-- Python
-- Google Cloud Vision API key
-- Gemini API key
+## 🔗 Related Repositories
 
-## Getting Started
+- 🧠 [Backend (Flask)](https://github.com/Loveena28/BookSnap-AI-Backend)
+- 🌐 [Frontend (this repo)](https://github.com/Loveena28/BookSnap-AI-Frontend)
 
-1. Clone the repository:
+## ✨ Features
 
-   ```bash
-   git clone https://github.com/Loveena28/QuickLit-BookSummarizer
-2. Install Angular dependencies:
-    
-    ```bash
-    cd angular-frontend
-    npm install
-3. Configure backend:
-    - Set up a virtual environment:
-        ```bash
-        cd python-backend
-        python -m venv venv
-        ```
-    - Install Python dependencies:
-        ```bash
-        source venv/bin/activate  # On Windows: .\venv\Scripts\activate
-        pip install -r requirements.txt
-        ```
-    - Set up configuration for Google Cloud Vision API and OpenAI GPT-3 API
-4. Run the application:
-    - Start the angular frontend
-        ```bash
-        cd angular-frontend
-        ng serve
-        ```
-    - Start the python backend
-        ```bash
-        cd python-backend
-        python main.py
-        ```
-    Access the application at http://localhost:4200 in your web browser.
+- 📸 Upload or capture a **book cover**
+- 🧠 Extracts **title**, **author**, and **genre** using OCR + AI
+- ✍️ Get a **short** or **detailed summary**
+- 🧾 Download a **PDF** with all details (including book cover)
+- 💡 Smart toggle for summary depth
+- 🎨 Simple, clean UI built with Angular
+- ☁️ Deployed using Flask backend + Angular frontend
 
-## User Interface
+---
 
-![Screenshot](snapshots/home.png)
-![Screenshot](snapshots/summary.png)
-![Screenshot](snapshots/export.png)
+## 🛠 Tech Stack
+
+| Frontend     | Backend     | AI Model          | OCR               | Deployment      |
+|--------------|-------------|-------------------|--------------------|-----------------|
+| Angular       | Flask (Python) | Gemini 1.5 Pro (via API) | Google Vision API | Vercel + Render |
+
+---
+
+## 📦 Setup Locally
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/yourusername/BookSnap-AI-Frontend.git
+cd BookSnap-AI-Frontend
+```
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+### 3. Run the development server
+```bash
+ng serve
+```
+
 
